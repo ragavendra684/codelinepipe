@@ -1,4 +1,5 @@
-FROM openjdk:17
-ADD target/codepipeline.jar codepipeline.jar
+FROM eclipse-temurin:17-jdk
+WORKDIR /app
+COPY ./target/codepipeline.jar .
 EXPOSE 8080
-ENTRYPOINT [ "java","-jar","/codepipeline.jar" ]
+CMD ["java", "-jar", "codepipeline.jar"]
