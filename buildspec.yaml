@@ -9,14 +9,14 @@ phases:
     runtime-versions:
       java: corretto17
     commands:
-      - echo "Installing dependencies..."
+      - echo "Installing Maven and Docker..."
       - yum install -y maven docker
 
   pre_build:
     commands:
-      - echo "Running Maven build..."
+      - echo "Starting Maven build..."
       - mvn clean install
-      - echo "Logging in to Amazon ECR..."
+      - echo "Authenticating with Amazon ECR..."
       - aws --version
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
       - echo "Repository URI: $REPOSITORY_URI"
@@ -25,7 +25,7 @@ phases:
 
   build:
     commands:
-      - echo "Building the Docker image..."
+      - echo "Building Docker image..."
       - docker build -t $REPOSITORY_URI:latest .
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
 
@@ -34,7 +34,7 @@ phases:
       - echo "Pushing Docker images to ECR..."
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - echo "Docker images pushed successfully."
+      - echo "Build and push complete."
 
 artifacts:
   files:
