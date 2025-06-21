@@ -1,5 +1,11 @@
-FROM eclipse-temurin:17-jdk
+# Use a lightweight OpenJDK base image
+FROM eclipse-temurin:17-jdk-alpine
+
+# Set the working directory
 WORKDIR /app
-COPY ./target/codepipeline.jar .
-EXPOSE 8080
-CMD ["java", "-jar", "codepipeline.jar"]
+
+# Copy the jar file into the container
+COPY target/*.jar app.jar
+
+# Run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]
